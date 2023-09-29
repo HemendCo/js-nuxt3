@@ -1,10 +1,29 @@
 {
-  "name": "hemend-js-nuxt3",
+  "name": "@hemend/nuxt3",
   "version": "1.0.0",
+  "description": "Hemend Nuxt module",
   "license": "MIT",
   "type": "module",
+  "author": {
+    "name": "Balal Arast",
+    "email": "arastbalal@gmail.com",
+    "url": "https://github.com/balalarast"
+  },
+  "homepage": "https://github.com/HemendCo/js-nuxt3",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HemendCo/js-nuxt3.git"
+  },
+  "bugs": {
+    "url": "https://github.com/HemendCo/js-nuxt3/issues"
+  },
+  "keywords": [
+    "nuxt",
+    "nuxt3"
+  ],
   "exports": {
     ".": {
+      "types": "./dist/types.d.ts",
       "import": "./dist/module.mjs",
       "require": "./dist/module.cjs"
     }
@@ -15,24 +34,23 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc",
     "prepack": "nuxt-module-build",
     "dev": "nuxi dev playground",
     "dev:build": "nuxi build playground",
-    "dev:prepare": "nuxt-module-build --stub && nuxi prepare playground"
+    "dev:prepare": "nuxt-module-build --stub && nuxt-module-build prepare && nuxi prepare playground"
   },
   "dependencies": {
-    "@nuxt/kit": "^3.0.0-rc.8",
+    "@hemend/js-library": "^1.0.10",
+    "@nuxt/kit": "^3.7.4",
     "@smartweb/vue-flash-message": "^1.0.0-alpha.12",
-    "hemend-js-library": "git+https://github.com/HemendCo/js-library.git",
     "sass": "^1.53.0",
     "sass-loader": "^13.0.2"
   },
   "devDependencies": {
-    "@nuxt/module-builder": "latest",
-    "@nuxtjs/eslint-config-typescript": "latest",
-    "eslint": "latest",
-    "nuxt": "^3.0.0-rc.8",
-    "typescript": "^4.6.3"
+    "@nuxt/devtools": "^0.8.5",
+    "@nuxt/module-builder": "^0.5.1",
+    "@nuxtjs/eslint-config-typescript": "^12.1.0",
+    "eslint": "^8.50.0",
+    "nuxt": "^3.7.4"
   }
 }

@@ -1,10 +1,9 @@
-import { defineNuxtConfig } from 'nuxt'
-import hemendJSNuxt3 from '..'
+import myModule from '../src/module'
 
 export default defineNuxtConfig({
   ssr: false,
   modules: [
-    hemendJSNuxt3
+    myModule
   ],
   hemend: {
     api: {

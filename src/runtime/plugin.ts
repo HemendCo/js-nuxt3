@@ -1,15 +1,15 @@
-import { defineNuxtPlugin } from '#app'
-import { useRuntimeConfig } from '#imports'
-import 'hemend-js-library/dist/require'
+
+import '@hemend/js-library/dist/require'
+import { defineNuxtPlugin, useRuntimeConfig } from '#imports'
 import * as helpers from './helpers/index'
-import * as libs from 'hemend-js-library'
+import * as libs from '@hemend/js-library'
 
 import '../assets/css/style.scss';
 
 export default defineNuxtPlugin((nuxtApp) => {
   const { hemend } = useRuntimeConfig()
 
-  console.log('ff', helpers)
+  console.log('ff', hemend)
 
   nuxtApp.provide('hemend', {
     storage() {

@@ -1,10 +1,10 @@
+import '@hemend/js-library/dist/require'
 import { resolve, dirname, basename } from 'path'
 import { fileURLToPath } from 'url'
 import { defineNuxtModule, addPlugin, addComponentsDir } from '@nuxt/kit'
 import { NuxtPlugin } from '@nuxt/schema';
 import { defu } from 'defu'
 import type { ModuleOptions } from './types'
-import 'hemend-js-library/dist/require'
 
 const namespace = 'hemend'
 
@@ -61,16 +61,14 @@ export default defineNuxtModule<ModuleOptions>({
     const layoutsDir = resolve(cwd, 'layouts')
     const pagesDir = resolve(cwd, 'pages')
     const pluginsDir = resolve(cwd, 'plugins')
-    const staticDir = resolve(cwd, 'static')
+    const publicDir = resolve(cwd, 'public')
     const storeDir = resolve(cwd, 'store')
-
-    console.log(cwd)
 
     addComponentsDir({
       path: resolve(runtimeDir, 'components'),
       pathPrefix: false,
       prefix: 'Hem',
-      level: 999,
+      priority: 999,
       global: true
     })
 
@@ -113,7 +111,7 @@ export default defineNuxtModule<ModuleOptions>({
       })
     }
 
-    nuxt.hook('autoImports:dirs', (dirs) => {
+    nuxt.hook('imports:dirs', (dirs) => {
       dirs.push(resolve(runtimeDir, 'composables'))
     })
   }
