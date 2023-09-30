@@ -1,10 +1,12 @@
-import '../../assets/css/style.scss';
+import { App as VueApp } from 'vue'
 
-import { defineNuxtPlugin } from '#app'
+import { defineNuxtPlugin } from '#imports'
 import FlashMessage from '@smartweb/vue-flash-message';
 
 export default defineNuxtPlugin((nuxtApp) => {
-    nuxtApp.vueApp.use(FlashMessage, {
+    const vueApp = (nuxtApp.vueApp as VueApp);
+    vueApp.use(FlashMessage, {
+        //@ts-ignore
         time: 8000,
         strategy: 'multiple'
     })

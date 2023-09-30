@@ -40,7 +40,7 @@
     "dev:prepare": "nuxt-module-build --stub && nuxt-module-build prepare && nuxi prepare playground"
   },
   "dependencies": {
-    "@hemend/js-library": "^1.0.10",
+    "@hemend/js-library": "^1.0.14",
     "@nuxt/kit": "^3.7.4",
     "@smartweb/vue-flash-message": "^1.0.0-alpha.12",
     "sass": "^1.53.0",

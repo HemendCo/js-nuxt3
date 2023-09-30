@@ -1,3 +1,7 @@
+import { DirectiveBinding } from 'vue'
+import { InputInfo } from '../../../types';
+import { App as VueApp } from 'vue'
+
 /*
 Reference:
   https://stackoverflow.com/a/52078139
@@ -59,8 +63,8 @@ const reNumeric = /^(?:\d*\.)?\d+$/;
 const reDigits = /^\d+$/;
 const selectableTypes = /text|password|search|tel|url/;
 
-function getInputElementSelection(el) {
-  let start = el.selectionStart, end = el.selectionEnd;
+function getInputElementSelection(el: HTMLInputElement) {
+  let start = (el.selectionStart as number), end = (el.selectionEnd as number);
   return {
     start: start,
     end: end,
@@ -69,8 +73,8 @@ function getInputElementSelection(el) {
   }
 }
 
-function detectPaste(el, callback) {
-  el.addEventListener('paste', function(e) {
+function detectPaste(el: HTMLInputElement, callback: any) {
+  el.addEventListener('paste', function(e: Event) {
     let sel = getInputElementSelection(el);
     let initialLength = el.value.length;
     window.setTimeout(function() {
@@ -88,11 +92,12 @@ function detectPaste(el, callback) {
   })
 }
 
-function detectInput(el, callback) {
-  el.addEventListener('input', function (e) {
+function detectInput(el: HTMLInputElement, callback: any) {
+  el.addEventListener('input', function (ev: Event) {
+    const e = (ev as InputEvent)
     if(['insertText', 'deleteContentBackward', 'deleteContentForward', 'deleteByCut'].includes(e.inputType)) {
       const insertedVal = e.data || '';
-      const position = e.target.selectionStart
+      const position = (e.target as HTMLInputElement).selectionStart as number
 
       const start = position - 1;
       const end = position + (insertedVal.length - 1);
@@ -107,7 +112,7 @@ function detectInput(el, callback) {
   })
 }
 
-function detectNumber(el, binding, info) {
+function detectNumber(el: HTMLInputElement, binding: DirectiveBinding, info: InputInfo) {
   let valWithoutDot = el.value.replace(/\./g, '').toEnNumbers();
   let number = el.value?.toEnNumbers() || '';
   let decimal = '';
@@ -122,7 +127,7 @@ function detectNumber(el, binding, info) {
     }
   }
 
-  if (((valWithoutDot.length > 0 || number.match(/\./g)?.length > 1) &&
+  if (((valWithoutDot.length > 0 || number.match(/\./g)!?.length > 1) &&
     (!reDigits.test(valWithoutDot) ||
     (!(binding.modifiers['decimal'] ? reNumeric : reDigits).test(number) &&
     (binding.modifiers['decimal'] ? number.split('.').length > 2 : true)))) ||
@@ -145,7 +150,8 @@ function detectNumber(el, binding, info) {
 
   if(binding.modifiers['money'] && number?.length > 0) {
     let event = new Event('input', { bubbles: true });
-    el.value = (number).numberFormat() + (binding?.value?.decimal > 0 ? decimal.substring(0, binding.value.decimal + 1) : decimal.substring(0, 3));
+    el.value = number.numberFormat(0) + (binding?.value?.decimal > 0 ? decimal.substring(0, binding.value.decimal + 1) : decimal.substring(0, 3));
+    //@ts-ignore
     let oldCommaCount = el.oldValue?.match(/\,/g)?.length || 0, newValueCount = el.value?.match(/\,/g)?.length || 0;
     let selectionNum = info.start + 1 + newValueCount - oldCommaCount;
     el.selectionStart = el.selectionEnd = selectionNum >= 1 ? selectionNum : 0;
@@ -153,11 +159,11 @@ function detectNumber(el, binding, info) {
   }
 }
 
-export const restrict = (options, app) => {
+export const restrict = (options: Record<string, any>, app: VueApp) => {
   const directiveName = options && typeof options === 'object' && 'name' in options ? options.name : 'restrict';
 
   app.directive(directiveName, {
-    beforeMount: (el, binding) => {
+    beforeMount: (el: HTMLInputElement, binding: DirectiveBinding) => {
       el.addEventListener('keydown', (e) => {
         const modifiersArray = Object.keys(binding.modifiers);
 
@@ -206,9 +212,9 @@ export const restrict = (options, app) => {
       }) // end addEventListener
     }, // end bind
 
-    mounted(el, binding) {
+    mounted(el: HTMLInputElement, binding: DirectiveBinding) {
       el.addEventListener('paste', (e) => {
-        const { target } = e;
+        const target = (e.target as HTMLInputElement)
         const validType = selectableTypes.test(target.type)
 
         if(!validType) {
@@ -218,16 +224,17 @@ export const restrict = (options, app) => {
       })
 
       if(!binding.modifiers['alpha']) {
-        detectPaste(el, function(pasteInfo) {
+        detectPaste(el, function(pasteInfo: InputInfo) {
           detectNumber(el, binding, pasteInfo)
         }) // end detectPaste
 
-        detectInput(el, function(inputInfo) {
+        detectInput(el, function(inputInfo: InputInfo) {
           detectNumber(el, binding, inputInfo)
         }) // end detectInput
       }
     }, // end inserted
-    updated(el) {
+    updated(el: HTMLInputElement) {
+      //@ts-ignore
       el.oldValue = el.value;
     }
   }) // end directive

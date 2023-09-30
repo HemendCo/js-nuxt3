@@ -1,3 +1,5 @@
+import { App as VueApp } from 'vue'
+
 /*
 Reference:
   https://medium.com/swlh/nuxt-creating-custom-directives-for-static-srr-sites-bf287f0cb6bb
@@ -21,11 +23,11 @@ const animateOnScrollObserver = new IntersectionObserver(
   }
 )
 
-export const animateOnScroll = (options, app) => {
+export const animateOnScroll = (options: Record<string, any>, app: VueApp) => {
   const directiveName = options && typeof options === 'object' && 'name' in options ? options.name : 'animate-on-scroll';
 
   app.directive(directiveName, {
-    beforeMount: el => {
+    beforeMount: (el: Element) => {
       el.classList.add('aniscroll-before-enter')
       animateOnScrollObserver.observe(el)
     }
